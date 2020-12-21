@@ -31,5 +31,56 @@ var connection = mysql.createConnection({
 connection.connect(function (err) {
   if (err) throw err;
   // run the start function after the connection is made to prompt the user
-  //start();
+  start();
 });
+
+function start() {
+  inquirer
+    .prompt({
+      name: "doSomething",
+      type: "list",
+      message: "What would you like to do?",
+      choices: ["View Something", "Add Something", "Remove Something", "Update Something"],
+    })
+    .then(function (answer) {
+      console.log(answer.doSomething);
+      switch (answer.doSomething) {
+        case "View Something":
+          viewSomething();
+          break;
+      }
+    });
+}
+
+function viewSomething() {
+  inquirer
+    .prompt({
+      name: "viewSomething",
+      type: "list",
+      message: "What would you like to view?",
+      choices: [
+        "View All Employees",
+        "View All Employees By Department",
+        "View All Employees By Manager",
+        "View All Departments",
+        "View All Roles",
+      ],
+    })
+    .then(function (answer) {
+      console.log(answer.viewSomething);
+    });
+}
+
+// [
+//   "View All Employees",
+//   "View All Employees By Department",
+//   "View All Employees By Manager",
+//   "View All Departments",
+//   "View All Roles",
+//   "Add Employee",
+//   "Add Department",
+//   "Add Role",
+//   "Remove Employee",
+//   "Update Employee Role",
+//   "Update Employee Manager",
+// ],
