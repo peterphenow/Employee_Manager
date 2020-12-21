@@ -48,6 +48,18 @@ function start() {
         case "View Something":
           viewSomething();
           break;
+
+        case "Add Something":
+          //addSomething();
+          break;
+
+        case "Remove Something":
+          //removeSomething();
+          break;
+
+        case "Update Something":
+          //updateSomething();
+          break;
       }
     });
 }
