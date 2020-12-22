@@ -80,6 +80,50 @@ function viewSomething() {
     })
     .then(function (answer) {
       console.log(answer.viewSomething);
+      switch (answer.viewSomething) {
+        case "View All Employees":
+          //viewEmployees();
+          let query = `SELECT 
+                              employee.id AS "ID"
+                            , CONCAT(employee.first_name, ' ', employee.last_name) AS "Employee"
+                            , role.title AS "Title"
+                            , department.name AS "Department"
+                            , role.salary AS "Salary"
+                            , CONCAT(B.first_name, ' ', B.last_name) AS "Manager"
+                         FROM employee 
+                            LEFT JOIN role
+                              ON employee.role_id = role.id
+                            LEFT JOIN department
+                              ON role.department_id = department.id
+                            LEFT JOIN employee B
+                              ON employee.manager_id = B.id;`;
+          connection.query(query, function (err, res) {
+            if (err) throw err;
+
+            console.log("-----------------------------------------", "\n");
+
+            console.table(res);
+
+            console.log("-----------------------------------------", "\n");
+          });
+          start();
+          break;
+
+        case "View All Employees By Department":
+          //viewEmployeesByDepartment();
+          break;
+
+        case "View All Employees By Manager":
+          //viewEmployeesByManager();
+          break;
+
+        case "View All Departments":
+          //viewDepartments();
+          break;
+
+        case "View All Roles":
+        //viewRoles()
+      }
     });
 }
 
@@ -93,6 +137,8 @@ function viewSomething() {
 //   "Add Department",
 //   "Add Role",
 //   "Remove Employee",
+//   "Remove Employee Roles",
+//   "Remove Department",
 //   "Update Employee Role",
 //   "Update Employee Manager",
 // ],
