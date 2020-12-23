@@ -145,7 +145,7 @@ function viewEmployees() {
   });
 }
 
-//create array of departments to use as choices
+//create array of departments to use as choices.  Upon adding a new department, will push new department to this array
 let depts = ["Sales", "Engineering", "Finance", "Legal"];
 
 // function to view all employees based on department selected
