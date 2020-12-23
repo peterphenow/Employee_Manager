@@ -11,6 +11,7 @@ CREATE TABLE department (
 );
 
 SELECT * FROM department;
+SELECT department.name FROM department;
 
 CREATE TABLE role (
   id INT NOT NULL AUTO_INCREMENT,
@@ -35,6 +36,20 @@ CREATE TABLE employee (
 );
 
 SELECT * FROM employee;
-
-
-
+    
+-- template used to test queries before adding to the JS file
+SELECT 
+	   employee.id AS "ID"
+     , CONCAT(employee.first_name, ' ', employee.last_name) AS "Employee"
+     , role.title AS "Title"
+     , department.name AS "Department"
+     , role.salary AS "Salary"
+	 , CONCAT(B.first_name, ' ', B.last_name) AS "Manager"
+  FROM employee 
+  LEFT JOIN role
+		ON employee.role_id = role.id
+  LEFT JOIN department
+		ON role.department_id = department.id
+  LEFT JOIN employee B
+		ON employee.manager_id = B.id
+ WHERE department.name = "Sales";
