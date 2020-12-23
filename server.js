@@ -82,35 +82,11 @@ function viewSomething() {
       console.log(answer.viewSomething);
       switch (answer.viewSomething) {
         case "View All Employees":
-          //viewEmployees();
-          let query = `SELECT 
-                              employee.id AS "ID"
-                            , CONCAT(employee.first_name, ' ', employee.last_name) AS "Employee"
-                            , role.title AS "Title"
-                            , department.name AS "Department"
-                            , role.salary AS "Salary"
-                            , CONCAT(B.first_name, ' ', B.last_name) AS "Manager"
-                         FROM employee 
-                            LEFT JOIN role
-                              ON employee.role_id = role.id
-                            LEFT JOIN department
-                              ON role.department_id = department.id
-                            LEFT JOIN employee B
-                              ON employee.manager_id = B.id;`;
-          connection.query(query, function (err, res) {
-            if (err) throw err;
-
-            console.log("-----------------------------------------", "\n");
-
-            console.table(res);
-
-            console.log("-----------------------------------------", "\n");
-          });
-          start();
+          viewEmployees();
           break;
 
         case "View All Employees By Department":
-          //viewEmployeesByDepartment();
+          viewEmployeesByDepartment();
           break;
 
         case "View All Employees By Manager":
@@ -142,3 +118,69 @@ function viewSomething() {
 //   "Update Employee Role",
 //   "Update Employee Manager",
 // ],
+
+//function to view all employees
+function viewEmployees() {
+  let query = `SELECT 
+                  employee.id AS "ID"
+                  , CONCAT(employee.first_name, ' ', employee.last_name) AS "Employee"
+                  , role.title AS "Title"
+                  , department.name AS "Department"
+                  , role.salary AS "Salary"
+                  , CONCAT(B.first_name, ' ', B.last_name) AS "Manager"
+                  FROM employee 
+                  LEFT JOIN role
+                    ON employee.role_id = role.id
+                  LEFT JOIN department
+                    ON role.department_id = department.id
+                  LEFT JOIN employee B
+                    ON employee.manager_id = B.id;`;
+  connection.query(query, function (err, res) {
+    if (err) throw err;
+
+    console.log("===================================================================");
+    console.table(res);
+    console.log("===================================================================");
+    start();
+  });
+}
+
+//create array of departments to use as choices
+let depts = ["Sales", "Engineering", "Finance", "Legal"];
+
+// function to view all employees based on department selected
+function viewEmployeesByDepartment() {
+  inquirer
+    .prompt({
+      name: "viewDepartment",
+      type: "list",
+      message: "What department would you like to view?",
+      choices: depts,
+    })
+    .then(function (answer) {
+      console.log(answer.viewDepartment);
+      let query = `SELECT 
+                      employee.id AS "ID"
+                      , CONCAT(employee.first_name, ' ', employee.last_name) AS "Employee"
+                      , role.title AS "Title"
+                      , department.name AS "Department"
+                      , role.salary AS "Salary"
+                      , CONCAT(B.first_name, ' ', B.last_name) AS "Manager"
+                      FROM employee 
+                      LEFT JOIN role
+                        ON employee.role_id = role.id
+                      LEFT JOIN department
+                        ON role.department_id = department.id
+                      LEFT JOIN employee B
+                        ON employee.manager_id = B.id
+                      WHERE department.name = "${answer.viewDepartment}"`;
+      connection.query(query, function (err, res) {
+        if (err) throw err;
+
+        console.log("===================================================================");
+        console.table(res);
+        console.log("===================================================================");
+        start();
+      });
+    });
+}
