@@ -98,7 +98,7 @@ function viewSomething() {
           break;
 
         case "View All Roles":
-        //viewRoles()
+          viewRoles();
       }
     });
 }
@@ -232,6 +232,26 @@ function viewEmployeesByManager() {
 //function to view all departments
 function viewDepartments() {
   let query = `SELECT * FROM department`;
+  connection.query(query, function (err, res) {
+    if (err) throw err;
+
+    console.log("===================================================================");
+    console.table(res);
+    console.log("===================================================================");
+    start();
+  });
+}
+
+//function to view all roles
+function viewRoles() {
+  let query = `SELECT  
+                      role.id AS "ID"
+                    , role.title AS "Title"
+                    , role.salary AS "Salary"
+                    , department.name AS "Department"
+                 FROM role
+                 LEFT JOIN department
+                   ON role.department_id = department.id`;
   connection.query(query, function (err, res) {
     if (err) throw err;
 
