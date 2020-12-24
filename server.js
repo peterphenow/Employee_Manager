@@ -94,7 +94,7 @@ function viewSomething() {
           break;
 
         case "View All Departments":
-          //viewDepartments();
+          viewDepartments();
           break;
 
         case "View All Roles":
@@ -227,4 +227,17 @@ function viewEmployeesByManager() {
         start();
       });
     });
+}
+
+//function to view all departments
+function viewDepartments() {
+  let query = `SELECT * FROM department`;
+  connection.query(query, function (err, res) {
+    if (err) throw err;
+
+    console.log("===================================================================");
+    console.table(res);
+    console.log("===================================================================");
+    start();
+  });
 }
