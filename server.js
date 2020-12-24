@@ -90,7 +90,7 @@ function viewSomething() {
           break;
 
         case "View All Employees By Manager":
-          //viewEmployeesByManager();
+          viewEmployeesByManager();
           break;
 
         case "View All Departments":
@@ -146,7 +146,7 @@ function viewEmployees() {
 }
 
 //create array of departments to use as choices.  Upon adding a new department, will push new department to this array
-let depts = ["Sales", "Engineering", "Finance", "Legal"];
+let deptsArr = ["Sales", "Engineering", "Finance", "Legal"];
 
 // function to view all employees based on department selected
 function viewEmployeesByDepartment() {
@@ -155,7 +155,7 @@ function viewEmployeesByDepartment() {
       name: "viewDepartment",
       type: "list",
       message: "What department would you like to view?",
-      choices: depts,
+      choices: deptsArr,
     })
     .then(function (answer) {
       console.log(answer.viewDepartment);
@@ -174,6 +174,50 @@ function viewEmployeesByDepartment() {
                       LEFT JOIN employee B
                         ON employee.manager_id = B.id
                       WHERE department.name = "${answer.viewDepartment}"`;
+      connection.query(query, function (err, res) {
+        if (err) throw err;
+
+        console.log("===================================================================");
+        console.table(res);
+        console.log("===================================================================");
+        start();
+      });
+    });
+}
+
+let managersArr = ["John Doe", "Devi Waldeburg", "Lyle Ibrahim", "Isabella Benson"];
+
+//function to view employees based on manager
+function viewEmployeesByManager() {
+  inquirer
+    .prompt({
+      name: "viewByManager",
+      type: "list",
+      message: "What manager's employees would you like to view?",
+      choices: managersArr,
+    })
+    .then(function (answer) {
+      console.log(answer.viewByManager);
+      let query = `SELECT *
+                    FROM (
+                    SELECT 
+                      employee.id AS "ID"
+                      , CONCAT(employee.first_name, ' ', employee.last_name) AS "Employee"
+                      , role.title AS "Title"
+                      , department.name AS "Department"
+                      , role.salary AS "Salary"
+                      , CONCAT(B.first_name, ' ', B.last_name) AS "Manager"
+                      FROM employee 
+                      LEFT JOIN role
+                        ON employee.role_id = role.id
+                      LEFT JOIN department
+                        ON role.department_id = department.id
+                      LEFT JOIN employee B
+                        ON employee.manager_id = B.id
+                        )
+                  AS data
+                  WHERE Employee = "${answer.viewByManager}"
+                    OR Manager = "${answer.viewByManager}"`;
       connection.query(query, function (err, res) {
         if (err) throw err;
 
