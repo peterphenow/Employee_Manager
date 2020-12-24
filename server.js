@@ -50,7 +50,7 @@ function start() {
           break;
 
         case "Add Something":
-          //addSomething();
+          addSomething();
           break;
 
         case "Remove Something":
@@ -104,11 +104,11 @@ function viewSomething() {
 }
 
 // [
-//   "View All Employees",
-//   "View All Employees By Department",
-//   "View All Employees By Manager",
-//   "View All Departments",
-//   "View All Roles",
+//   X "View All Employees",
+//   X "View All Employees By Department",
+//   X "View All Employees By Manager",
+//   X "View All Departments",
+//   X "View All Roles",
 //   "Add Employee",
 //   "Add Department",
 //   "Add Role",
@@ -260,4 +260,31 @@ function viewRoles() {
     console.log("===================================================================");
     start();
   });
+}
+
+//function to determine what to add
+function addSomething() {
+  inquirer
+    .prompt({
+      name: "addSomething",
+      type: "list",
+      message: "What would you like to add?",
+      choices: ["Add Employee", "Add Department", "Add Role"],
+    })
+    .then(function (answer) {
+      console.log(answer.viewSomething);
+      switch (answer.viewSomething) {
+        case "Add Employee":
+          //addEmployees();
+          break;
+
+        case "Add Department":
+          //addDepartment();
+          break;
+
+        case "Add Role":
+          //addRole();
+          break;
+      }
+    });
 }
