@@ -35,12 +35,18 @@ connection.connect(function (err) {
 });
 
 function start() {
+  //populate the manager, department, and roles arrays
+  createManagerArr();
+  createManagerArrWithId();
+  createDeptsArr();
+  createRolesArr();
+
   inquirer
     .prompt({
       name: "doSomething",
       type: "list",
       message: "What would you like to do?",
-      choices: ["View Something", "Add Something", "Remove Something", "Update Something"],
+      choices: ["View Something", "Add Something", "Update Something", "Remove Something"],
     })
     .then(function (answer) {
       console.log(answer.doSomething);
@@ -53,17 +59,18 @@ function start() {
           addSomething();
           break;
 
-        case "Remove Something":
-          //removeSomething();
-          break;
-
         case "Update Something":
           //updateSomething();
+          break;
+
+        case "Remove Something":
+          //removeSomething();
           break;
       }
     });
 }
 
+// ================== Begin VIEW Section ==================
 function viewSomething() {
   inquirer
     .prompt({
@@ -103,22 +110,6 @@ function viewSomething() {
     });
 }
 
-// [
-//   X "View All Employees",
-//   X "View All Employees By Department",
-//   X "View All Employees By Manager",
-//   X "View All Departments",
-//   X "View All Roles",
-//   "Add Employee",
-//   "Add Department",
-//   "Add Role",
-//   "Remove Employee",
-//   "Remove Employee Roles",
-//   "Remove Department",
-//   "Update Employee Role",
-//   "Update Employee Manager",
-// ],
-
 //function to view all employees
 function viewEmployees() {
   let query = `SELECT 
@@ -144,9 +135,6 @@ function viewEmployees() {
     start();
   });
 }
-
-//create array of departments to use as choices.  Upon adding a new department, will push new department to this array
-let deptsArr = ["Sales", "Engineering", "Finance", "Legal"];
 
 // function to view all employees based on department selected
 function viewEmployeesByDepartment() {
@@ -184,8 +172,6 @@ function viewEmployeesByDepartment() {
       });
     });
 }
-
-let managersArr = ["John Doe", "Devi Waldeburg", "Lyle Ibrahim", "Isabella Benson"];
 
 //function to view employees based on manager
 function viewEmployeesByManager() {
@@ -262,6 +248,9 @@ function viewRoles() {
   });
 }
 
+// =================== End VIEW Section ==========================
+// =================== Begin ADD Section =========================
+
 //function to determine what to add
 function addSomething() {
   inquirer
@@ -272,10 +261,10 @@ function addSomething() {
       choices: ["Add Employee", "Add Department", "Add Role"],
     })
     .then(function (answer) {
-      console.log(answer.viewSomething);
-      switch (answer.viewSomething) {
+      console.log(answer.addSomething);
+      switch (answer.addSomething) {
         case "Add Employee":
-          //addEmployees();
+          addEmployee();
           break;
 
         case "Add Department":
@@ -288,3 +277,123 @@ function addSomething() {
       }
     });
 }
+
+//function to add an employee
+function addEmployee() {
+  inquirer
+    .prompt([
+      {
+        name: "firstName",
+        type: "input",
+        message: "What is the employee's first name?",
+      },
+      {
+        name: "lastName",
+        type: "input",
+        message: "What is the employee's last name?",
+      },
+      {
+        name: "role",
+        type: "list",
+        message: "What is the employee's role?",
+        choices: rolesArr,
+      },
+      {
+        name: "manager",
+        type: "list",
+        message: "Who is the employee's manager?",
+        choices: managersArrWithId,
+      },
+    ])
+    .then((resp) => {
+      //console.log(resp.firstName, resp.lastName, resp.role.slice(0, 1), resp.manager.slice(0, 1));
+      //hoping these case statements work. Still needs more work
+      let query = `INSERT INTO employee (first_name, last_name, role_id, manager_id)
+                    VALUES ('${resp.firstName}', '${resp.lastName}', ${resp.role.slice(
+        0,
+        1
+      )}, ${resp.manager.slice(0, 1)})`;
+
+      connection.query(query, function (err, res) {
+        if (err) throw err;
+
+        console.log("===================================================================");
+        console.log(`${resp.firstName} ${resp.lastName} was added to the database.`);
+        console.log("===================================================================");
+        start();
+      });
+    });
+}
+
+// ==================== End ADD Section =========================
+// ==================== Begin UPDATE Section ====================
+
+// ==================== End UPDATE Section ======================
+// ==================== Begin REMOVE Section ====================
+
+// ==================== End REMOVE Section ======================
+// =============== Begin ARRAY CREATE Section ===================
+
+//function to populate the departments array with all current departments
+let deptsArr = [];
+function createDeptsArr() {
+  connection.query("SELECT * FROM department", (err, res) => {
+    if (err) throw err;
+    deptsArr = [];
+    for (let i = 0; i < res.length; i++) {
+      deptsArr.push(res[i].name);
+    }
+  });
+}
+
+//function to populate the managers array with all current managers
+let managersArr = [];
+function createManagerArr() {
+  connection.query("SELECT * FROM employee WHERE manager_id IS null", (err, res) => {
+    if (err) throw err;
+    managersArr = [];
+    for (let i = 0; i < res.length; i++) {
+      managersArr.push(res[i].first_name + " " + res[i].last_name);
+    }
+  });
+}
+
+//function to populate the managers array with all current managers.  This include the ID for adding new employees
+let managersArrWithId = [];
+function createManagerArrWithId() {
+  connection.query("SELECT * FROM employee WHERE manager_id IS null", (err, res) => {
+    if (err) throw err;
+    managersArrWithId = [];
+    for (let i = 0; i < res.length; i++) {
+      managersArrWithId.push(res[i].id + " " + res[i].first_name + " " + res[i].last_name);
+    }
+  });
+}
+
+//function to populate roles array with all current roles
+let rolesArr = [];
+function createRolesArr() {
+  connection.query("SELECT * FROM role", (err, res) => {
+    if (err) throw err;
+    rolesArr = [];
+    for (let i = 0; i < res.length; i++) {
+      rolesArr.push(res[i].id + " " + res[i].title);
+    }
+  });
+}
+
+// [
+//   X "View All Employees",
+//   X "View All Employees By Department",
+//   X "View All Employees By Manager",
+//   X "View All Departments",
+//   X "View All Roles",
+//   "Add Employee",
+//   "Add Department",
+//   "Add Role",
+//   "Remove Employee",
+//   "Remove Employee Roles",
+//   "Remove Department",
+//   "Update Employee Role",
+//   "Update Employee Manager",
+// ],
