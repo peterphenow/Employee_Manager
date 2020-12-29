@@ -80,13 +80,7 @@ function viewSomething() {
       name: "viewSomething",
       type: "list",
       message: "What would you like to view?",
-      choices: [
-        "View All Employees",
-        "View All Employees By Department",
-        "View All Employees By Manager",
-        "View All Departments",
-        "View All Roles",
-      ],
+      choices: ["View All Employees", "View All Employees By Department", "View All Employees By Manager", "View All Departments", "View All Roles"],
     })
     .then(function (answer) {
       console.log(answer.viewSomething);
@@ -311,10 +305,10 @@ function addEmployee() {
     .then((resp) => {
       //console.log(resp.firstName, resp.lastName, resp.role.slice(0, 1), resp.manager.slice(0, 1));
       let query = `INSERT INTO employee (first_name, last_name, role_id, manager_id)
-                    VALUES ('${resp.firstName}', '${resp.lastName}', ${resp.role.substring(
+                    VALUES ('${resp.firstName}', '${resp.lastName}', ${resp.role.substring(0, resp.role.indexOf(" "))}, ${resp.manager.substring(
         0,
-        resp.role.indexOf(" ")
-      )}, ${resp.manager.substring(0, resp.manager.indexOf(" "))})`;
+        resp.manager.indexOf(" ")
+      )})`;
 
       connection.query(query, function (err, res) {
         if (err) throw err;
@@ -372,10 +366,7 @@ function addRole() {
     ])
     .then((resp) => {
       let query = `INSERT INTO role (title, salary, department_id)
-                     VALUES ('${resp.roleName}', ${resp.roleSalary}, ${resp.roleDept.substring(
-        0,
-        resp.roleDept.indexOf(" ")
-      )})`;
+                     VALUES ('${resp.roleName}', ${resp.roleSalary}, ${resp.roleDept.substring(0, resp.roleDept.indexOf(" "))})`;
       connection.query(query, function (err, res) {
         if (err) throw err;
 
@@ -441,9 +432,7 @@ function updateEmployeeRole() {
         //resp.newRole.substring(resp.newRole.indexOf(" ") + 1) will get everything after the first " "
         console.log("===================================================================");
         console.log(
-          `${resp.employee.substring(
-            resp.employee.indexOf(" ") + 1
-          )}'s role was updated to ${resp.newRole.substring(resp.newRole.indexOf(" ") + 1)}.`
+          `${resp.employee.substring(resp.employee.indexOf(" ") + 1)}'s role was updated to ${resp.newRole.substring(resp.newRole.indexOf(" ") + 1)}.`
         );
         console.log("===================================================================");
         start();
@@ -479,9 +468,7 @@ function updateEmployeeManager() {
         //resp.newManager.substring(resp.newManager.indexOf(" ") + 1) will get everything after the first " "
         console.log("===================================================================");
         console.log(
-          `${resp.employee.substring(
-            resp.employee.indexOf(" ") + 1
-          )}'s manager was updated to ${resp.newManager.substring(
+          `${resp.employee.substring(resp.employee.indexOf(" ") + 1)}'s manager was updated to ${resp.newManager.substring(
             resp.newManager.indexOf(" ") + 1
           )}.`
         );
@@ -504,10 +491,10 @@ function removeSomething() {
       choices: ["Remove Employee", "Remove Role", "Remove Department"],
     })
     .then(function (answer) {
-      console.log(answer.updateSomething);
-      switch (answer.updateSomething) {
+      console.log(answer.removeSomething);
+      switch (answer.removeSomething) {
         case "Remove Employee":
-          //removeEmployee();
+          removeEmployee();
           break;
 
         case "Remove Role":
@@ -518,6 +505,31 @@ function removeSomething() {
           //removeDepartment();
           break;
       }
+    });
+}
+
+function removeEmployee() {
+  inquirer
+    .prompt([
+      {
+        name: "employee",
+        type: "list",
+        message: "Which employee would you like to remove?",
+        choices: employeeArrWithId,
+      },
+    ])
+    .then((resp) => {
+      //console.log(resp.firstName, resp.lastName, resp.role.slice(0, 1), resp.manager.slice(0, 1));
+      let query = `DELETE FROM employee WHERE id = ${resp.employee.substring(0, resp.employee.indexOf(" "))}`;
+
+      connection.query(query, function (err, res) {
+        if (err) throw err;
+
+        console.log("===================================================================");
+        console.log(`${resp.employee.substring(resp.employee.indexOf(" ") + 1)} was removed from the database.`);
+        console.log("===================================================================");
+        start();
+      });
     });
 }
 
