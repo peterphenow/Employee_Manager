@@ -42,6 +42,7 @@ function start() {
   createDeptsArrWithId();
   createRolesArr();
   createEmployeeArr();
+  createEmployeeArrWithId();
 
   inquirer
     .prompt({
@@ -310,10 +311,10 @@ function addEmployee() {
     .then((resp) => {
       //console.log(resp.firstName, resp.lastName, resp.role.slice(0, 1), resp.manager.slice(0, 1));
       let query = `INSERT INTO employee (first_name, last_name, role_id, manager_id)
-                    VALUES ('${resp.firstName}', '${resp.lastName}', ${resp.role.slice(
+                    VALUES ('${resp.firstName}', '${resp.lastName}', ${resp.role.substring(
         0,
-        1
-      )}, ${resp.manager.slice(0, 1)})`;
+        resp.role.indexOf(" ")
+      )}, ${resp.manager.substring(0, resp.manager.indexOf(" "))})`;
 
       connection.query(query, function (err, res) {
         if (err) throw err;
@@ -371,7 +372,10 @@ function addRole() {
     ])
     .then((resp) => {
       let query = `INSERT INTO role (title, salary, department_id)
-                     VALUES ('${resp.roleName}', ${resp.roleSalary}, ${resp.roleDept.slice(0, 1)})`;
+                     VALUES ('${resp.roleName}', ${resp.roleSalary}, ${resp.roleDept.substring(
+        0,
+        resp.roleDept.indexOf(" ")
+      )})`;
       connection.query(query, function (err, res) {
         if (err) throw err;
 
@@ -399,13 +403,49 @@ function updateSomething() {
       console.log(answer.updateSomething);
       switch (answer.updateSomething) {
         case "Update Employee Role":
-          //updateEmployeeRole();
+          updateEmployeeRole();
           break;
 
         case "Update Employee Manager":
           //updateEmployeeManager();
           break;
       }
+    });
+}
+
+function updateEmployeeRole() {
+  inquirer
+    .prompt([
+      {
+        name: "employee",
+        type: "list",
+        message: "Which employees' role do you want to update?",
+        choices: employeeArrWithId,
+      },
+      {
+        name: "newRole",
+        type: "list",
+        message: "What is the new role?",
+        choices: rolesArr,
+      },
+    ])
+    .then((resp) => {
+      console.log(resp);
+      let query = `UPDATE employee
+                     SET role_id = ${resp.newRole.substring(0, resp.newRole.indexOf(" "))}
+                     WHERE employee.id = ${resp.employee.substring(0, resp.employee.indexOf(" "))}`;
+      connection.query(query, function (err, res) {
+        if (err) throw err;
+
+        console.log("===================================================================");
+        console.log(
+          `${resp.employee.substring(
+            resp.employee.indexOf(" ") + 1
+          )}'s role was updated to ${resp.newRole.substring(resp.newRole.indexOf(" ") + 1)}.`
+        );
+        console.log("===================================================================");
+        start();
+      });
     });
 }
 
@@ -483,6 +523,18 @@ function createEmployeeArr() {
     employeeArr = [];
     for (let i = 0; i < res.length; i++) {
       employeeArr.push(res[i].first_name + " " + res[i].last_name);
+    }
+  });
+}
+
+//function to populate roles array with all current roles
+let employeeArrWithId = [];
+function createEmployeeArrWithId() {
+  connection.query("SELECT * FROM employee", (err, res) => {
+    if (err) throw err;
+    employeeArrWithId = [];
+    for (let i = 0; i < res.length; i++) {
+      employeeArrWithId.push(res[i].id + " " + res[i].first_name + " " + res[i].last_name);
     }
   });
 }
