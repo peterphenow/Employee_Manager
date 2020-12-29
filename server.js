@@ -41,6 +41,7 @@ function start() {
   createDeptsArr();
   createDeptsArrWithId();
   createRolesArr();
+  createEmployeeArr();
 
   inquirer
     .prompt({
@@ -61,7 +62,7 @@ function start() {
           break;
 
         case "Update Something":
-          //updateSomething();
+          updateSomething();
           break;
 
         case "Remove Something":
@@ -385,6 +386,29 @@ function addRole() {
 // ==================== End ADD Section =========================
 // ==================== Begin UPDATE Section ====================
 
+//function to determine what to update
+function updateSomething() {
+  inquirer
+    .prompt({
+      name: "updateSomething",
+      type: "list",
+      message: "What would you like to update?",
+      choices: ["Update Employee Role", "Update Employee Manager"],
+    })
+    .then(function (answer) {
+      console.log(answer.updateSomething);
+      switch (answer.updateSomething) {
+        case "Update Employee Role":
+          //updateEmployeeRole();
+          break;
+
+        case "Update Employee Manager":
+          //updateEmployeeManager();
+          break;
+      }
+    });
+}
+
 // ==================== End UPDATE Section ======================
 // ==================== Begin REMOVE Section ====================
 
@@ -447,6 +471,18 @@ function createRolesArr() {
     rolesArr = [];
     for (let i = 0; i < res.length; i++) {
       rolesArr.push(res[i].id + " " + res[i].title);
+    }
+  });
+}
+
+//function to populate roles array with all current roles
+let employeeArr = [];
+function createEmployeeArr() {
+  connection.query("SELECT * FROM employee", (err, res) => {
+    if (err) throw err;
+    employeeArr = [];
+    for (let i = 0; i < res.length; i++) {
+      employeeArr.push(res[i].first_name + " " + res[i].last_name);
     }
   });
 }
