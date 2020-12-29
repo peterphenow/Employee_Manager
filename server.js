@@ -498,7 +498,7 @@ function removeSomething() {
           break;
 
         case "Remove Role":
-          //removeRole();
+          removeRole();
           break;
 
         case "Remove Department":
@@ -527,6 +527,31 @@ function removeEmployee() {
 
         console.log("===================================================================");
         console.log(`${resp.employee.substring(resp.employee.indexOf(" ") + 1)} was removed from the database.`);
+        console.log("===================================================================");
+        start();
+      });
+    });
+}
+
+function removeRole() {
+  inquirer
+    .prompt([
+      {
+        name: "role",
+        type: "list",
+        message: "Which role would you like to remove?",
+        choices: rolesArr,
+      },
+    ])
+    .then((resp) => {
+      //console.log(resp.firstName, resp.lastName, resp.role.slice(0, 1), resp.manager.slice(0, 1));
+      let query = `DELETE FROM role WHERE id = ${resp.role.substring(0, resp.role.indexOf(" "))}`;
+
+      connection.query(query, function (err, res) {
+        if (err) throw err;
+
+        console.log("===================================================================");
+        console.log(`${resp.role.substring(resp.role.indexOf(" ") + 1)} was removed from the database.`);
         console.log("===================================================================");
         start();
       });
