@@ -431,12 +431,14 @@ function updateEmployeeRole() {
     ])
     .then((resp) => {
       console.log(resp);
+      // resp.newRole.substring(0, resp.newRole.indexOf(" ")) will get everything before the first " "
       let query = `UPDATE employee
                      SET role_id = ${resp.newRole.substring(0, resp.newRole.indexOf(" "))}
                      WHERE employee.id = ${resp.employee.substring(0, resp.employee.indexOf(" "))}`;
       connection.query(query, function (err, res) {
         if (err) throw err;
 
+        //resp.newRole.substring(resp.newRole.indexOf(" ") + 1) will get everything after the first " "
         console.log("===================================================================");
         console.log(
           `${resp.employee.substring(
