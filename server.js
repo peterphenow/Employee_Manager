@@ -502,7 +502,7 @@ function removeSomething() {
           break;
 
         case "Remove Department":
-          //removeDepartment();
+          removeDepartment();
           break;
       }
     });
@@ -519,7 +519,6 @@ function removeEmployee() {
       },
     ])
     .then((resp) => {
-      //console.log(resp.firstName, resp.lastName, resp.role.slice(0, 1), resp.manager.slice(0, 1));
       let query = `DELETE FROM employee WHERE id = ${resp.employee.substring(0, resp.employee.indexOf(" "))}`;
 
       connection.query(query, function (err, res) {
@@ -544,7 +543,6 @@ function removeRole() {
       },
     ])
     .then((resp) => {
-      //console.log(resp.firstName, resp.lastName, resp.role.slice(0, 1), resp.manager.slice(0, 1));
       let query = `DELETE FROM role WHERE id = ${resp.role.substring(0, resp.role.indexOf(" "))}`;
 
       connection.query(query, function (err, res) {
@@ -552,6 +550,30 @@ function removeRole() {
 
         console.log("===================================================================");
         console.log(`${resp.role.substring(resp.role.indexOf(" ") + 1)} was removed from the database.`);
+        console.log("===================================================================");
+        start();
+      });
+    });
+}
+
+function removeDepartment() {
+  inquirer
+    .prompt([
+      {
+        name: "dept",
+        type: "list",
+        message: "Which department would you like to remove?",
+        choices: deptsArrWithId,
+      },
+    ])
+    .then((resp) => {
+      let query = `DELETE FROM department WHERE id = ${resp.dept.substring(0, resp.dept.indexOf(" "))}`;
+
+      connection.query(query, function (err, res) {
+        if (err) throw err;
+
+        console.log("===================================================================");
+        console.log(`${resp.dept.substring(resp.dept.indexOf(" ") + 1)} was removed from the database.`);
         console.log("===================================================================");
         start();
       });
@@ -654,9 +676,10 @@ function createEmployeeArrWithId() {
 //   X "Add Employee",
 //   X "Add Department",
 //   X "Add Role",
-//   "Remove Employee",
-//   "Remove Employee Roles",
-//   "Remove Department",
+//   X "Remove Employee",
+//   X "Remove Employee Roles",
+//   X "Remove Department",
 //   X "Update Employee Role",
 //   X "Update Employee Manager",
+//   "Add an Exit function to main menu"
 // ],
