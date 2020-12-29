@@ -39,6 +39,7 @@ function start() {
   createManagerArr();
   createManagerArrWithId();
   createDeptsArr();
+  createDeptsArrWithId();
   createRolesArr();
 
   inquirer
@@ -272,7 +273,7 @@ function addSomething() {
           break;
 
         case "Add Role":
-          //addRole();
+          addRole();
           break;
       }
     });
@@ -347,6 +348,40 @@ function addDepartment() {
     });
 }
 
+function addRole() {
+  inquirer
+    .prompt([
+      {
+        name: "roleName",
+        type: "input",
+        message: "What is the name of the new role?",
+      },
+      {
+        name: "roleSalary",
+        type: "input",
+        message: "What is the annual salary for the new role?",
+      },
+      {
+        name: "roleDept",
+        type: "list",
+        message: "What department will this new role be a part of?",
+        choices: deptsArrWithId,
+      },
+    ])
+    .then((resp) => {
+      let query = `INSERT INTO role (title, salary, department_id)
+                     VALUES ('${resp.roleName}', ${resp.roleSalary}, ${resp.roleDept.slice(0, 1)})`;
+      connection.query(query, function (err, res) {
+        if (err) throw err;
+
+        console.log("===================================================================");
+        console.log(`${resp.roleName} was added to the database.`);
+        console.log("===================================================================");
+        start();
+      });
+    });
+}
+
 // ==================== End ADD Section =========================
 // ==================== Begin UPDATE Section ====================
 
@@ -364,6 +399,18 @@ function createDeptsArr() {
     deptsArr = [];
     for (let i = 0; i < res.length; i++) {
       deptsArr.push(res[i].name);
+    }
+  });
+}
+
+//function to populate the departments array with all current departments, includes ID for adding new roles
+let deptsArrWithId = [];
+function createDeptsArrWithId() {
+  connection.query("SELECT * FROM department", (err, res) => {
+    if (err) throw err;
+    deptsArrWithId = [];
+    for (let i = 0; i < res.length; i++) {
+      deptsArrWithId.push(res[i].id + " " + res[i].name);
     }
   });
 }
@@ -412,7 +459,7 @@ function createRolesArr() {
 //   X "View All Roles",
 //   X "Add Employee",
 //   X "Add Department",
-//   "Add Role",
+//   X "Add Role",
 //   "Remove Employee",
 //   "Remove Employee Roles",
 //   "Remove Department",
