@@ -268,7 +268,7 @@ function addSomething() {
           break;
 
         case "Add Department":
-          //addDepartment();
+          addDepartment();
           break;
 
         case "Add Role":
@@ -307,7 +307,6 @@ function addEmployee() {
     ])
     .then((resp) => {
       //console.log(resp.firstName, resp.lastName, resp.role.slice(0, 1), resp.manager.slice(0, 1));
-      //hoping these case statements work. Still needs more work
       let query = `INSERT INTO employee (first_name, last_name, role_id, manager_id)
                     VALUES ('${resp.firstName}', '${resp.lastName}', ${resp.role.slice(
         0,
@@ -319,6 +318,29 @@ function addEmployee() {
 
         console.log("===================================================================");
         console.log(`${resp.firstName} ${resp.lastName} was added to the database.`);
+        console.log("===================================================================");
+        start();
+      });
+    });
+}
+
+function addDepartment() {
+  inquirer
+    .prompt([
+      {
+        name: "deptName",
+        type: "input",
+        message: "What is the name of the new department?",
+      },
+    ])
+    .then((resp) => {
+      let query = `INSERT INTO department (name)
+                     VALUES ('${resp.deptName}')`;
+      connection.query(query, function (err, res) {
+        if (err) throw err;
+
+        console.log("===================================================================");
+        console.log(`${resp.deptName} was added to the database.`);
         console.log("===================================================================");
         start();
       });
@@ -388,8 +410,8 @@ function createRolesArr() {
 //   X "View All Employees By Manager",
 //   X "View All Departments",
 //   X "View All Roles",
-//   "Add Employee",
-//   "Add Department",
+//   X "Add Employee",
+//   X "Add Department",
 //   "Add Role",
 //   "Remove Employee",
 //   "Remove Employee Roles",
