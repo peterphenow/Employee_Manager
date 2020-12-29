@@ -407,7 +407,7 @@ function updateSomething() {
           break;
 
         case "Update Employee Manager":
-          //updateEmployeeManager();
+          updateEmployeeManager();
           break;
       }
     });
@@ -430,7 +430,7 @@ function updateEmployeeRole() {
       },
     ])
     .then((resp) => {
-      console.log(resp);
+      //console.log(resp);
       // resp.newRole.substring(0, resp.newRole.indexOf(" ")) will get everything before the first " "
       let query = `UPDATE employee
                      SET role_id = ${resp.newRole.substring(0, resp.newRole.indexOf(" "))}
@@ -444,6 +444,46 @@ function updateEmployeeRole() {
           `${resp.employee.substring(
             resp.employee.indexOf(" ") + 1
           )}'s role was updated to ${resp.newRole.substring(resp.newRole.indexOf(" ") + 1)}.`
+        );
+        console.log("===================================================================");
+        start();
+      });
+    });
+}
+
+function updateEmployeeManager() {
+  inquirer
+    .prompt([
+      {
+        name: "employee",
+        type: "list",
+        message: "Which employees' manager do you want to update?",
+        choices: employeeArrWithId,
+      },
+      {
+        name: "newManager",
+        type: "list",
+        message: "Who is the new manager?",
+        choices: managersArrWithId,
+      },
+    ])
+    .then((resp) => {
+      //console.log(resp);
+      // resp.newRole.substring(0, resp.newRole.indexOf(" ")) will get everything before the first " "
+      let query = `UPDATE employee
+                     SET manager_id = ${resp.newManager.substring(0, resp.newManager.indexOf(" "))}
+                     WHERE employee.id = ${resp.employee.substring(0, resp.employee.indexOf(" "))}`;
+      connection.query(query, function (err, res) {
+        if (err) throw err;
+
+        //resp.newManager.substring(resp.newManager.indexOf(" ") + 1) will get everything after the first " "
+        console.log("===================================================================");
+        console.log(
+          `${resp.employee.substring(
+            resp.employee.indexOf(" ") + 1
+          )}'s manager was updated to ${resp.newManager.substring(
+            resp.newManager.indexOf(" ") + 1
+          )}.`
         );
         console.log("===================================================================");
         start();
@@ -553,6 +593,6 @@ function createEmployeeArrWithId() {
 //   "Remove Employee",
 //   "Remove Employee Roles",
 //   "Remove Department",
-//   "Update Employee Role",
-//   "Update Employee Manager",
+//   X "Update Employee Role",
+//   X "Update Employee Manager",
 // ],
