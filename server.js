@@ -67,7 +67,7 @@ function start() {
           break;
 
         case "Remove Something":
-          //removeSomething();
+          removeSomething();
           break;
       }
     });
@@ -493,6 +493,33 @@ function updateEmployeeManager() {
 
 // ==================== End UPDATE Section ======================
 // ==================== Begin REMOVE Section ====================
+
+//function to determine what to update
+function removeSomething() {
+  inquirer
+    .prompt({
+      name: "removeSomething",
+      type: "list",
+      message: "What would you like to remove?",
+      choices: ["Remove Employee", "Remove Role", "Remove Department"],
+    })
+    .then(function (answer) {
+      console.log(answer.updateSomething);
+      switch (answer.updateSomething) {
+        case "Remove Employee":
+          //removeEmployee();
+          break;
+
+        case "Remove Role":
+          //removeRole();
+          break;
+
+        case "Remove Department":
+          //removeDepartment();
+          break;
+      }
+    });
+}
 
 // ==================== End REMOVE Section ======================
 // =============== Begin ARRAY CREATE Section ===================
