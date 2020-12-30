@@ -1,6 +1,7 @@
 const mysql = require("mysql");
 const inquirer = require("inquirer");
 const consoleTable = require("console.table");
+const chalk = require("chalk");
 
 // set up ASCII art
 const logo = require("asciiart-logo");
@@ -48,7 +49,7 @@ function start() {
     .prompt({
       name: "doSomething",
       type: "list",
-      message: "What would you like to do?",
+      message: chalk.red("What would you like to do?"),
       choices: ["View Something", "Add Something", "Update Something", "Remove Something", "Exit"],
     })
     .then(function (answer) {
@@ -71,7 +72,7 @@ function start() {
           break;
 
         case "Exit":
-          process.exit(console.log("Good-Bye!"));
+          process.exit(console.log(chalk.red("Good-Bye!")));
       }
     });
 }
@@ -82,7 +83,7 @@ function viewSomething() {
     .prompt({
       name: "viewSomething",
       type: "list",
-      message: "What would you like to view?",
+      message: chalk.red("What would you like to view?"),
       choices: ["View All Employees", "View All Employees By Department", "View All Employees By Manager", "View All Departments", "View All Roles"],
     })
     .then(function (answer) {
@@ -142,7 +143,7 @@ function viewEmployeesByDepartment() {
     .prompt({
       name: "viewDepartment",
       type: "list",
-      message: "What department would you like to view?",
+      message: chalk.red("What department would you like to view?"),
       choices: deptsArr,
     })
     .then(function (answer) {
@@ -179,7 +180,7 @@ function viewEmployeesByManager() {
     .prompt({
       name: "viewByManager",
       type: "list",
-      message: "What manager's employees would you like to view?",
+      message: chalk.red("What manager's employees would you like to view?"),
       choices: managersArr,
     })
     .then(function (answer) {
@@ -257,7 +258,7 @@ function addSomething() {
     .prompt({
       name: "addSomething",
       type: "list",
-      message: "What would you like to add?",
+      message: chalk.red("What would you like to add?"),
       choices: ["Add Employee", "Add Department", "Add Role"],
     })
     .then(function (answer) {
@@ -285,23 +286,23 @@ function addEmployee() {
       {
         name: "firstName",
         type: "input",
-        message: "What is the employee's first name?",
+        message: chalk.red("What is the employee's first name?"),
       },
       {
         name: "lastName",
         type: "input",
-        message: "What is the employee's last name?",
+        message: chalk.red("What is the employee's last name?"),
       },
       {
         name: "role",
         type: "list",
-        message: "What is the employee's role?",
+        message: chalk.red("What is the employee's role?"),
         choices: rolesArr,
       },
       {
         name: "manager",
         type: "list",
-        message: "Who is the employee's manager?",
+        message: chalk.red("Who is the employee's manager?"),
         choices: managersArrWithId,
       },
     ])
@@ -316,9 +317,9 @@ function addEmployee() {
       connection.query(query, function (err, res) {
         if (err) throw err;
 
-        console.log("===================================================================");
-        console.log(`${resp.firstName} ${resp.lastName} was added to the database.`);
-        console.log("===================================================================");
+        console.log(chalk.yellow("==================================================================="));
+        console.log(chalk.yellow(`${resp.firstName} ${resp.lastName} was added to the database.`));
+        console.log(chalk.yellow("==================================================================="));
         start();
       });
     });
@@ -330,7 +331,7 @@ function addDepartment() {
       {
         name: "deptName",
         type: "input",
-        message: "What is the name of the new department?",
+        message: chalk.red("What is the name of the new department?"),
       },
     ])
     .then((resp) => {
@@ -339,9 +340,9 @@ function addDepartment() {
       connection.query(query, function (err, res) {
         if (err) throw err;
 
-        console.log("===================================================================");
-        console.log(`${resp.deptName} was added to the database.`);
-        console.log("===================================================================");
+        console.log(chalk.yellow("==================================================================="));
+        console.log(chalk.yellow(`${resp.deptName} was added to the database.`));
+        console.log(chalk.yellow("==================================================================="));
         start();
       });
     });
@@ -353,17 +354,17 @@ function addRole() {
       {
         name: "roleName",
         type: "input",
-        message: "What is the name of the new role?",
+        message: chalk.red("What is the name of the new role?"),
       },
       {
         name: "roleSalary",
         type: "input",
-        message: "What is the annual salary for the new role?",
+        message: chalk.red("What is the annual salary for the new role?"),
       },
       {
         name: "roleDept",
         type: "list",
-        message: "What department will this new role be a part of?",
+        message: chalk.red("What department will this new role be a part of?"),
         choices: deptsArrWithId,
       },
     ])
@@ -373,9 +374,9 @@ function addRole() {
       connection.query(query, function (err, res) {
         if (err) throw err;
 
-        console.log("===================================================================");
-        console.log(`${resp.roleName} was added to the database.`);
-        console.log("===================================================================");
+        console.log(chalk.yellow("==================================================================="));
+        console.log(chalk.yellow(`${resp.roleName} was added to the database.`));
+        console.log(chalk.yellow("==================================================================="));
         start();
       });
     });
@@ -390,7 +391,7 @@ function updateSomething() {
     .prompt({
       name: "updateSomething",
       type: "list",
-      message: "What would you like to update?",
+      message: chalk.red("What would you like to update?"),
       choices: ["Update Employee Role", "Update Employee Manager"],
     })
     .then(function (answer) {
@@ -413,13 +414,13 @@ function updateEmployeeRole() {
       {
         name: "employee",
         type: "list",
-        message: "Which employees' role do you want to update?",
+        message: chalk.red("Which employees' role do you want to update?"),
         choices: employeeArrWithId,
       },
       {
         name: "newRole",
         type: "list",
-        message: "What is the new role?",
+        message: chalk.red("What is the new role?"),
         choices: rolesArr,
       },
     ])
@@ -433,11 +434,15 @@ function updateEmployeeRole() {
         if (err) throw err;
 
         //resp.newRole.substring(resp.newRole.indexOf(" ") + 1) will get everything after the first " "
-        console.log("===================================================================");
+        console.log(chalk.yellow("==================================================================="));
         console.log(
-          `${resp.employee.substring(resp.employee.indexOf(" ") + 1)}'s role was updated to ${resp.newRole.substring(resp.newRole.indexOf(" ") + 1)}.`
+          chalk.yellow(
+            `${resp.employee.substring(resp.employee.indexOf(" ") + 1)}'s role was updated to ${resp.newRole.substring(
+              resp.newRole.indexOf(" ") + 1
+            )}.`
+          )
         );
-        console.log("===================================================================");
+        console.log(chalk.yellow("==================================================================="));
         start();
       });
     });
@@ -449,13 +454,13 @@ function updateEmployeeManager() {
       {
         name: "employee",
         type: "list",
-        message: "Which employees' manager do you want to update?",
+        message: chalk.red("Which employees' manager do you want to update?"),
         choices: employeeArrWithId,
       },
       {
         name: "newManager",
         type: "list",
-        message: "Who is the new manager?",
+        message: chalk.red("Who is the new manager?"),
         choices: managersArrWithId,
       },
     ])
@@ -469,13 +474,15 @@ function updateEmployeeManager() {
         if (err) throw err;
 
         //resp.newManager.substring(resp.newManager.indexOf(" ") + 1) will get everything after the first " "
-        console.log("===================================================================");
+        console.log(chalk.yellow("==================================================================="));
         console.log(
-          `${resp.employee.substring(resp.employee.indexOf(" ") + 1)}'s manager was updated to ${resp.newManager.substring(
-            resp.newManager.indexOf(" ") + 1
-          )}.`
+          chalk.yellow(
+            `${resp.employee.substring(resp.employee.indexOf(" ") + 1)}'s manager was updated to ${resp.newManager.substring(
+              resp.newManager.indexOf(" ") + 1
+            )}.`
+          )
         );
-        console.log("===================================================================");
+        console.log(chalk.yellow("==================================================================="));
         start();
       });
     });
@@ -490,7 +497,7 @@ function removeSomething() {
     .prompt({
       name: "removeSomething",
       type: "list",
-      message: "What would you like to remove?",
+      message: chalk.red("What would you like to remove?"),
       choices: ["Remove Employee", "Remove Role", "Remove Department"],
     })
     .then(function (answer) {
@@ -517,7 +524,7 @@ function removeEmployee() {
       {
         name: "employee",
         type: "list",
-        message: "Which employee would you like to remove?",
+        message: chalk.red("Which employee would you like to remove?"),
         choices: employeeArrWithId,
       },
     ])
@@ -527,9 +534,9 @@ function removeEmployee() {
       connection.query(query, function (err, res) {
         if (err) throw err;
 
-        console.log("===================================================================");
-        console.log(`${resp.employee.substring(resp.employee.indexOf(" ") + 1)} was removed from the database.`);
-        console.log("===================================================================");
+        console.log(chalk.yellow("==================================================================="));
+        console.log(chalk.yellow(`${resp.employee.substring(resp.employee.indexOf(" ") + 1)} was removed from the database.`));
+        console.log(chalk.yellow("==================================================================="));
         start();
       });
     });
@@ -541,7 +548,7 @@ function removeRole() {
       {
         name: "role",
         type: "list",
-        message: "Which role would you like to remove?",
+        message: chalk.red("Which role would you like to remove?"),
         choices: rolesArr,
       },
     ])
@@ -551,9 +558,9 @@ function removeRole() {
       connection.query(query, function (err, res) {
         if (err) throw err;
 
-        console.log("===================================================================");
-        console.log(`${resp.role.substring(resp.role.indexOf(" ") + 1)} was removed from the database.`);
-        console.log("===================================================================");
+        console.log(chalk.yellow("==================================================================="));
+        console.log(chalk.yellow(`${resp.role.substring(resp.role.indexOf(" ") + 1)} was removed from the database.`));
+        console.log(chalk.yellow("==================================================================="));
         start();
       });
     });
@@ -565,7 +572,7 @@ function removeDepartment() {
       {
         name: "dept",
         type: "list",
-        message: "Which department would you like to remove?",
+        message: chalk.red("Which department would you like to remove?"),
         choices: deptsArrWithId,
       },
     ])
@@ -575,9 +582,9 @@ function removeDepartment() {
       connection.query(query, function (err, res) {
         if (err) throw err;
 
-        console.log("===================================================================");
-        console.log(`${resp.dept.substring(resp.dept.indexOf(" ") + 1)} was removed from the database.`);
-        console.log("===================================================================");
+        console.log(chalk.yellow("==================================================================="));
+        console.log(chalk.yellow(`${resp.dept.substring(resp.dept.indexOf(" ") + 1)} was removed from the database.`));
+        console.log(chalk.yellow("==================================================================="));
         start();
       });
     });
