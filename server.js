@@ -49,7 +49,7 @@ function start() {
       name: "doSomething",
       type: "list",
       message: "What would you like to do?",
-      choices: ["View Something", "Add Something", "Update Something", "Remove Something"],
+      choices: ["View Something", "Add Something", "Update Something", "Remove Something", "Exit"],
     })
     .then(function (answer) {
       console.log(answer.doSomething);
@@ -69,6 +69,9 @@ function start() {
         case "Remove Something":
           removeSomething();
           break;
+
+        case "Exit":
+          process.exit(console.log("Good-Bye!"));
       }
     });
 }
