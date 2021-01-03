@@ -14,7 +14,7 @@ config.margin = "5";
 console.log(logo(config).render());
 
 // create the connection information for the sql database
-var connection = mysql.createConnection({
+let connection = mysql.createConnection({
   host: "localhost",
 
   // Your port; if not 3306
