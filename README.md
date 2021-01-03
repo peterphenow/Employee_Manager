@@ -14,9 +14,9 @@ You may view the video file [here](https://github.com/peterphenow/HW12_Employee_
 
 ## **Screenshots**
 
-<img src="./assets/viewAllEmployees.png" alt="view employees" width="450" height="250">&nbsp;&nbsp;<img src="./assets/addEmployee.png" alt="add employee" width="450" height="250">
+<img src="./assets/viewAllEmployees.png" alt="view employees" width="400" height="250">&nbsp;&nbsp;<img src="./assets/addEmployee.png" alt="add employee" width="400" height="250">
 
-<img src="./assets/updateEmployee.png" alt="update employee" width="450" height="250">&nbsp;&nbsp;<img src="./assets/removeEmployee.png" alt="remove employee" width="450" height="250">
+<img src="./assets/updateEmployee.png" alt="update employee" width="400" height="250">&nbsp;&nbsp;<img src="./assets/removeEmployee.png" alt="remove employee" width="400" height="250">
 
 ## **License**
 
