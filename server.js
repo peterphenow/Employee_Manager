@@ -653,7 +653,7 @@ function createRolesArr() {
   });
 }
 
-//function to populate roles array with all current roles
+//function to populate employee array with all current employees
 let employeeArr = [];
 function createEmployeeArr() {
   connection.query("SELECT * FROM employee", (err, res) => {
@@ -665,7 +665,7 @@ function createEmployeeArr() {
   });
 }
 
-//function to populate roles array with all current roles
+//function to populate employee array with all current employees with ID
 let employeeArrWithId = [];
 function createEmployeeArrWithId() {
   connection.query("SELECT * FROM employee", (err, res) => {
@@ -676,20 +676,3 @@ function createEmployeeArrWithId() {
     }
   });
 }
-
-// [
-//   X "View All Employees",
-//   X "View All Employees By Department",
-//   X "View All Employees By Manager",
-//   X "View All Departments",
-//   X "View All Roles",
-//   X "Add Employee",
-//   X "Add Department",
-//   X "Add Role",
-//   X "Remove Employee",
-//   X "Remove Employee Roles",
-//   X "Remove Department",
-//   X "Update Employee Role",
-//   X "Update Employee Manager",
-//   "Add an Exit function to main menu"
-// ],
