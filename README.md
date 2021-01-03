@@ -10,7 +10,7 @@ No starter code was given for this assignment, everything(including the database
 
 ## **Link**
 
-You may view the video file [here](https://github.com/peterphenow/HW12_Employee_Manager/blob/main/assets/employeeManagerVideo.webm).
+You may view the video file [here](https://github.com/peterphenow/Employee_Manager/blob/main/assets/employeeManagerVideo.webm).
 
 ## **Screenshots**
 
